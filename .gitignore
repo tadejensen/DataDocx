@@ -1,0 +1,20 @@
+# filenames to ignore
+*.pdf
+*.spec
+# python files
+*.pyc
+*.bmp
+*.jpg
+*.pickle
+config.py
+# advertising files
+*.txt
+*.docx
+*.pptx
+# paths to ignore
+Huje 8xV2340;E842/
+databases/
+temp/
+dist/
+build/
+
