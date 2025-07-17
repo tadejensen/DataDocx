@@ -550,7 +550,7 @@ class Report:
             self.add_remark(address=address, flag=flag, text=text)
 
     def mark_default_done_chapters_as_done(self):
-        for chap in default_done_chapters:
+        for chap in config.default_done_chapters:
             if chap in self.get_chapters() and chap not in self.get_done_chapters():
                 self.done_chapters.append(chap)
 
@@ -1535,5 +1535,3 @@ class Project:
     def get_all_remarks(self, allowed_flags: Optional[list]=None,
                         drop_cols: Optional[list]=None) -> pd.DataFrame:
         return dbf.get_project_remarks(self, allowed_flags, drop_cols)
-
-
