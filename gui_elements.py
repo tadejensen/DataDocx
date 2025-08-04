@@ -43,6 +43,7 @@ config = load_config()
 # BUG: when in RemarkEditor, changing page of Remarkselector and then changing back to original page, then clicking okay, the page will not be refreshed
 # BUG: when changing the width of an entry to the checklist (text length, adding flag), the size of the remarkeditor window can flicker. this happens when the width of the checklist_frm needs to change. this hangs up the program which then has to be killed
 # BUG: after placing a pagebreak, a new paragraph is started. this can lead to an empty page, if the pagebreak is inserted where there would be a pagebreak anyway because of a full page (pagebreak sits on empty page)
+# BUG: catch no weas selected selected on setup / no subfolders for weas
 
 
 class Mainwindow(dnd.Tk):
