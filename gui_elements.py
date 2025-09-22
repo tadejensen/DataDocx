@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk, font
 from tkinter import filedialog as fd
 import tkinterDnD as dnd
+import gi 
+from gi.repository import Gtk, Gio, GLib
 
 import pandas as pd
 import numpy as np
@@ -23,8 +25,10 @@ import physicals as phys
 import database_functions as dbf
 
 from typing import Optional
+gi.require_version('Gtk', '4.0')
 
 idx = pd.IndexSlice
+gi.require_version('Gtk', '4.0')
 config = load_config()
 
 # TODO: possibility to copy remarks from one turbine to another, like when defining which sections are in Fazit or when determining which points are in Prüfliste (copy to turbine, replace remark [text only/delete images?])
@@ -1434,10 +1438,13 @@ class RemarkEditor(tk.Toplevel):
     def open_image_selector(self):
         '''opens file explorer whose selected images are
         appended to the remark's images'''
-        filenames = fd.askopenfilenames(
-            filetypes=[('Bilder', ('.png', '.jpg')), ('Alle', '.*')],
-            initialdir=f'{os.getcwd()}/{self.wea.id}/0-Fertig',
-            title=f'Bilder auswählen für {self.titlestrvar.get()}')
+        initial_dir = f'{os.getcwd()}/{self.wea.id}/0-Fertig'
+
+        if sys.platform.startswith('win32'):
+            filenames = get_filenames_windows(initial_dir, title=self.titlestrvar.get())
+        elif sys.platform.startswith('linux'):
+            filenames = get_filenames_linux(initial_dir, title=self.titlestrvar.get())
+
         filenames = [path[path.rfind('/')+1:] for path in filenames]
         self.focus()
         for imagename in list(filenames):
@@ -5367,7 +5374,60 @@ class StrVarText(tk.Text):
             self.is_updating = False
 
 
+def get_filenames_windows(initial_dir: str=None, title: str=''):
+    filenames = fd.askopenfilenames(
+        filetypes=[('Bilder', ('.png', '.jpg')), ('Alle', '.*')],
+        initialdir=initial_dir,
+        title=f'Bilder auswählen für {title}' if title else 'Bilder auswählen')
+    return filenames
 
+def get_filenames_linux(initial_dir: str=None, title: str=''):
+    dialog = Gtk.FileChooserDialog(
+        title=f'Bilder auswählen für {title}' if title else 'Bilder auswählen',
+        transient_for = None,
+        action=Gtk.FileChooserAction.OPEN,
+    )
+    dialog.add_buttons(
+        'Abbrechen', Gtk.ResponseType.CANCEL,
+        'Auswählen', Gtk.ResponseType.OK
+    )
+    dialog.set_select_multiple(True)  # allow multiple selection
+
+    # Set initial directory if provided
+    if initial_dir and os.path.isdir(initial_dir):
+        dialog.set_current_folder(Gio.File.new_for_path(initial_dir))
+
+    # Create filters
+    filter_images = Gtk.FileFilter()
+    filter_images.set_name("Bilder")
+    filter_images.add_mime_type("image/png")
+    filter_images.add_mime_type("image/jpeg")
+    filter_images.add_pattern("*.png")
+    filter_images.add_pattern("*.jpg")
+    dialog.add_filter(filter_images)
+
+    filter_all = Gtk.FileFilter()
+    filter_all.set_name("Alle")
+    filter_all.add_pattern("*")
+    dialog.add_filter(filter_all)
+
+    filenames = []
+    # Run the dialog
+    def on_response(dialog, response):
+        nonlocal filenames
+        if response == Gtk.ResponseType.OK:
+            files = dialog.get_files()
+            filenames = [f.get_path() for f in files]
+        dialog.destroy()
+        loop.quit()
+
+    dialog.connect('response', on_response)
+    dialog.show()
+
+    loop = GLib.MainLoop()
+    loop.run()
+
+    return filenames
 
 
 
