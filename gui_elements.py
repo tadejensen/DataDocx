@@ -3408,7 +3408,7 @@ class Extras_Selection_Frame(ttk.Frame):
     def open_doc(self):
         doc_name = self.wea.report.get('id')
         doc_path = f'{os.getcwd()}/{self.wea.get('id')}/{doc_name}.docx'
-        os.startfile(doc_path)
+        gui_f.open_file(doc_path)
 
     def make_overview(self):
         style = self.overview_style_var.get()

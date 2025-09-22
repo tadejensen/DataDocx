@@ -475,5 +475,13 @@ def add_hyperlink(paragraph, text, url):
     return hyperlink
 
 
+def open_file(path):
+    if sys.platform.startswith('darwin'):  # macOS
+        subprocess.call(('open', path))
+    elif os.name == 'nt':  # Windows
+        os.startfile(path)
+    elif os.name == 'posix':  # Linux, BSD, etc.
+        subprocess.call(('xdg-open', path))
+
 
     
