@@ -2,7 +2,9 @@ import tkinter as tk
 from tkinter import ttk, font
 from tkinter import filedialog as fd
 import tkinterDnD as dnd
+
 import gi 
+gi.require_version('Gtk', '4.0')
 from gi.repository import Gtk, Gio, GLib
 
 import pandas as pd
@@ -25,10 +27,8 @@ import physicals as phys
 import database_functions as dbf
 
 from typing import Optional
-gi.require_version('Gtk', '4.0')
 
 idx = pd.IndexSlice
-gi.require_version('Gtk', '4.0')
 config = load_config()
 
 # TODO: possibility to copy remarks from one turbine to another, like when defining which sections are in Fazit or when determining which points are in Prüfliste (copy to turbine, replace remark [text only/delete images?])
@@ -61,7 +61,7 @@ class Mainwindow(dnd.Tk):
         self.minsize(500, 700)
         self.project = project
         self.title('DataDocx - kein Projekt ausgewählt')
-        self.iconbitmap(f'{mainpath}/images/icon.ico')
+        if sys.platform == 'win32': self.iconbitmap(f'{mainpath}/images/icon.ico')
 
         self.lift()
         self.focus_force()
@@ -1031,7 +1031,10 @@ class Flag_Combobox(ttk.Combobox):
             if char == '':
                 continue
             if char == '-':
-                self.bind(f'<minus>', lambda *args, c=char: self.textvariable.set(c))
+                self.bind('<minus>', lambda *args, c=char: self.textvariable.set(c))
+                continue
+            if char == '*':
+                self.bind('<asterisk>', lambda *args, c=char: self.textvariable.set(c))
                 continue
             if not char == char.lower():
                 self.bind(f'<{char.lower()}>', lambda *args, c=char: self.textvariable.set(c))
@@ -3428,7 +3431,7 @@ class Extras_Selection_Frame(ttk.Frame):
     def open_overview(self):
         excelname = self.get_excelname()
         excelpath = f'{os.getcwd()}/{excelname}'
-        os.startfile(excelpath)
+        gui_f.open_file(excelpath)
 
     def update_todos(self, remarks=None):
         gui_f.delete_children(self.todos_frm)

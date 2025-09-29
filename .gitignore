@@ -8,7 +8,6 @@
 *.pickle
 config.py
 # advertising files
-*.txt
 *.docx
 *.pptx
 # paths to ignore
@@ -17,4 +16,5 @@ databases/
 temp/
 dist/
 build/
+venv/
 

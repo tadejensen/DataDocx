@@ -122,7 +122,7 @@ def coordinates_from_images(wea_id):
     x = []
     y = []
     for image in images:
-        folder = image.split('\\')[-2]
+        folder = image.split('\\' if sys.platform == 'win32' else '/')[-2]
         if folder in ['0-Fertig', '1-Bericht', '6-Doku']: continue
         with Image.open(image) as img:
             try:
@@ -136,7 +136,7 @@ def coordinates_from_images(wea_id):
         raise AttributeError(f'Not enough images have GPS data.')
     x = np.median(np.array(x))
     y = np.median(np.array(y))
-    return (x, y)
+    return f'{x}, {y}'
 
 def get_year(date: str):
     year = int(date[date.rfind('.')+1:])
@@ -207,7 +207,7 @@ def get_tkinter_pic(image_path, width_pxl: int=160,
     return tk_pic
 
 def open_image(image_path):
-    os.startfile(image_path)
+    open_file(image_path)
 
 def rm_children(top):
     for root, dirs, files in os.walk(top, topdown=False):

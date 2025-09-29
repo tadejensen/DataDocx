@@ -620,7 +620,6 @@ class Report:
         if attr in self.__dict__.keys():
             return self.__dict__[attr]
 
-    @gui_f.timeit
     def update_compressed_images(self, check_only=None):
         '''
         update images in 1-Bericht. Checks for changes in images in 0-Fertig und
@@ -683,7 +682,8 @@ class Report:
         
         img_diff = get_img_diff()
         for img in img_diff['del']:
-            os.remove(f'{os.getcwd()}/{self.parent_wea.id}/1-Bericht/{img}')
+            try: os.remove(f'{os.getcwd()}/{self.parent_wea.id}/1-Bericht/{img}')
+            except IsADirectoryError: continue
         
         for img in img_diff['add'] + img_diff['change']:
             add_image(img)

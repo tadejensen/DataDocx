@@ -55,18 +55,15 @@ inspection_type_translator = {
     'ZOP': 'Zustandorientierte Prüfung|Der Prüfumfang einer wiederkehrenden Prüfung wird mit abgedeckt',
 }
 
-default_done_chapters = ['Allgemeine Daten|Prüfbericht|Zugehörige Dokumente',
-                         'Allgemeine Daten|Prüfbericht|Änderungen in dieser Revision',
-                         'Allgemeine Daten|Legende zum Prüfbericht|Im Fazit verwendete Farben',
-                         'Prüfungsgrundlagen|Prüfungsgrundlage',
-                         'Prüfergebnis|Auflagen bzw. weiteres Vorgehen|Pflichten des Auftraggebers bzw. des Betreibers']
 
 def load_config():
     base_dir = os.path.dirname(sys.executable if getattr(sys, 'frozen', False) else __file__)
     config_path = os.path.join(base_dir, "config.py")
 
     if not os.path.exists(config_path):
-        raise FileNotFoundError("config.py not found!")
+        print("config.py not found!\ncreating config.py from template.")
+        with open(config_path, 'w') as f:
+            f.write(get_default_config())
 
     spec = importlib.util.spec_from_file_location("config", config_path)
     config = importlib.util.module_from_spec(spec)
@@ -79,7 +76,7 @@ default_contractor = ('8.2 Ingenieurbüro Deine Firma|'
                       'Deine-Str. 123|'
                       '12345 Deine Stadt|'
                       'Telefon: 0112 / 358 1321|'
-                      'Mail:    dein.name@8p2.de)
+                      'Mail:    dein.name@8p2.de')
 default_engineer = 'Dipl.-Ing. Dein Name'
 default_inspectors = [('Prüfung', 'Dein Name, 8.2', '', ''),
                       ('Begleitung', 'Dein Kumpane, 8.2', '', '')]
@@ -89,6 +86,11 @@ footnote_companyname_abbrev = '8.2 Ing.-Büro DF'
 default_images = ['8p2_logo'] # images that are needed in the report, must be located in databases/report/
 projects_path = 'C:/Users/deinname/Pfad/Zu/Deinen/Projekten'
 default_image_width_pxl = 500
+default_done_chapters = ['Allgemeine Daten|Prüfbericht|Zugehörige Dokumente',
+                         'Allgemeine Daten|Prüfbericht|Änderungen in dieser Revision',
+                         'Allgemeine Daten|Legende zum Prüfbericht|Im Fazit verwendete Farben',
+                         'Prüfungsgrundlagen|Prüfungsgrundlage',
+                         'Prüfergebnis|Auflagen bzw. weiteres Vorgehen|Pflichten des Auftraggebers bzw. des Betreibers']
 '''
 
 

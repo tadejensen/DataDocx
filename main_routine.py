@@ -19,18 +19,17 @@ projects_path = load_config().projects_path
 activate_ips_on_exception()
 # ignore performance warning to stop console cluttering
 warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
+pd.set_option('future.no_silent_downcasting', True)
 
 # correct resolution
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(2) # if your windows version >= 8.1
+try: ctypes.windll.shcore.SetProcessDpiAwareness(2) # if your windows version >= 8.1
 except:
-    try:
-        ctypes.windll.user32.SetProcessDPIAware() # win 8.0 or less 
-    except:
-        pass
+    try: ctypes.windll.user32.SetProcessDPIAware() # win 8.0 or less 
+    except: pass
 
 myappid = '8p2.DataDocx' # arbitrary string
-ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+if sys.platform == 'win32':
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
 
 root = gui_e.Mainwindow()

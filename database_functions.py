@@ -117,7 +117,7 @@ def order_by_position(remarks):
     if not ordered_df.eq(remarks).fulltext.all():
         raise ValueError(f'DataFrame mismatch. Ordered remarks have length {len(ordered)}, '
                          f'original DF has length {len(remarks)}. '
-                        'Somethings wrong, perhaps negative order numbers?')
+                        'Somethings wrong, perhaps negative or duplicate order numbers?')
     return ordered_df
     
 
@@ -445,17 +445,20 @@ def checklist_remove_blacklisted(wea, checklist: pd.DataFrame) -> pd.DataFrame:
             isblacklisted |= (checklist
                               .blacklist
                               .str.contains(f'{oem},')
-                              .replace(pd.NA, False)) # comma explanation see checklist_get_whitelisted
+                              .fillna(False)
+                              .astype(bool)) # comma explanation see checklist_get_whitelisted
         if model:
             isblacklisted |= (checklist
                               .blacklist
                               .str.contains(model)
-                              .replace(pd.NA, False))
+                              .fillna(False)
+                              .astype(bool))
         if tower_type:
             isblacklisted |= reduce(lambda x, y: x | y, [(checklist
                                                     .blacklist
                                                     .str.contains(tower_unit)
-                                                    .replace(np.nan, False))\
+                                                    .fillna(False)
+                                                    .astype(bool))\
                          for tower_unit in tower_type.split(db_split_char)])
 
 
@@ -479,18 +482,21 @@ def checklist_get_whitelisted(wea, checklist: pd.DataFrame) -> pd.DataFrame:
         wanted |= reduce(lambda x, y: x | y, [(checklist
                                                .whitelist
                                                .str.contains(tower_unit)
-                                               .replace(np.nan, False))\
+                                               .fillna(False)
+                                               .astype(bool))\
                          for tower_unit in tower_type.split(db_split_char)])
     if model:
         wanted |= (checklist
                    .whitelist
                    .str.contains(model)
-                   .replace(np.nan, False))   # bool necessary for | operation in the end
+                   .fillna(False)
+                   .astype(bool))   # bool necessary for | operation in the end
     if oem:
         wanted |= (checklist
                    .whitelist
                    .str.contains(f'{oem},') # comma to not include other whitelisted models of same oem (do not onclude Enercon E70 if wl Enercon is asked)
-                   .replace(np.nan, False))
+                   .fillna(False)
+                   .astype(bool))
         
     return checklist.where(wanted).dropna(subset='fulltext')
 
