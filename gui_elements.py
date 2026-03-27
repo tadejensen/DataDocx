@@ -3,9 +3,12 @@ from tkinter import ttk, font
 from tkinter import filedialog as fd
 import tkinterDnD as dnd
 
-import gi 
-gi.require_version('Gtk', '4.0')
-from gi.repository import Gtk, Gio, GLib
+try:
+    import gi 
+    gi.require_version('Gtk', '4.0')
+    from gi.repository import Gtk, Gio, GLib
+except ModuleNotFoundError:
+    print("Modul gi nicht installiert. Sollte kein Problem sein, sofern nicht auf Linux.")
 
 import pandas as pd
 import numpy as np
@@ -606,10 +609,8 @@ class Authors_Frame(ttk.Frame):
             authors.extend(self.report.get_authors())
         except: pass
         if not authors:
-            authors = [('Erstellt:', 'Dipl.-Ing Tade Marten Jensen', 'Sankt Annen', None, 'Tade_sign.jpg'),
-                       ('Geprüft:', 'Dipl.-Ing (FH) Axel Jensen', 'Wyk auf Föhr',
-                        'DATUM EINFÜGEN',
-                        'Axel_sign.png')]
+            authors = [(None, 'i. A. Dipl.-Ing Tade Marten Jensen',
+                        'Malente', None, 'Tade_sign.jpg')]
         return authors
     
     def get_authors(self):
@@ -3424,9 +3425,9 @@ class Extras_Selection_Frame(ttk.Frame):
     def get_excelname(self):
         overview_style = self.overview_style_var.get()
         if overview_style == 'DataDocx': 
-            return f'overview {self.wea.report.parent_project.get('name')}.xlsx'
+            return f'Mängelliste {self.wea.report.parent_project.get('name')}.xlsx'
         elif overview_style == 'Inspect':
-            return f'overview {self.wea.report.parent_project.get('name')}_Insp.xlsx'
+            return f'Mängelliste {self.wea.report.parent_project.get('name')} ganzer Text.xlsx'
         else: raise ValueError(f'unknown value of overview style: {overview_style}')
     def open_overview(self):
         excelname = self.get_excelname()

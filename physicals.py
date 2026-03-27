@@ -793,7 +793,7 @@ class Report:
             if pd.isna(farm_number) or farm_number == '' or farm_number == None:
                 farm_number = None
             if (farm:=wea_db.windfarm) and farm_number:
-                titleinfo['Windpark und Standortnr.'] = f'{farm}, {farm_number}'
+                titleinfo['Windpark und Standortnr.'] = f'{farm}, WEA {farm_number}'
             elif farm:
                 titleinfo['Windpark'] = farm
             titleinfo['Standort der WEA'] = wea_db.location
@@ -815,6 +815,7 @@ class Report:
             titleinfo['vspace6'] = vspace_long
             titleinfo['Verantwortl. Ingenieur'] = self.parent_project.get('engineer')
             titleinfo['vspace7'] = vspace_long
+            titleinfo['Berichtsnummer'] = self.get('id')
             titleinfo['Datum'] = self.get_latest_date_from_authors()
 
             for what, value in titleinfo.items():

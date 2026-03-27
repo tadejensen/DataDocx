@@ -19,7 +19,8 @@ projects_path = load_config().projects_path
 activate_ips_on_exception()
 # ignore performance warning to stop console cluttering
 warnings.simplefilter(action='ignore', category=pd.errors.PerformanceWarning)
-pd.set_option('future.no_silent_downcasting', True)
+try: pd.set_option('future.no_silent_downcasting', True)
+except: pass
 
 # correct resolution
 try: ctypes.windll.shcore.SetProcessDpiAwareness(2) # if your windows version >= 8.1

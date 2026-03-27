@@ -7,6 +7,8 @@
 *.jpg
 *.pickle
 config.py
+bewertung.py
+konkretere Notizen.txt
 # advertising files
 *.docx
 *.pptx
