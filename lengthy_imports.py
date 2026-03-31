@@ -30,8 +30,8 @@ inspection_properties = {'Prüfauftrag': 'kind',
                          'Prüfumfang': 'scope',
                          'Betriebsstunden': 'wea_hours',
                          'Ertrag (kWh)': 'wea_output',
-                         'Wind Probelauf': 'testrun_wind',
-                         'Leistung Probelauf': 'testrun_power',
+                         'Wind Probelauf (m/s)': 'testrun_wind',
+                         'Leistung Probelauf (kW)': 'testrun_power',
                          }
 
 report_properties = {'Nummer': 'id'}

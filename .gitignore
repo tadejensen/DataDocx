@@ -7,7 +7,7 @@
 *.jpg
 *.pickle
 config.py
-bewertung.py
+bewertung.txt
 konkretere Notizen.txt
 # advertising files
 *.docx

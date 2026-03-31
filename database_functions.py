@@ -710,7 +710,7 @@ def get_overview(project) -> pd.DataFrame:
 
 def excel_overview(project):
     rems = get_overview(project)
-    excel_path = f'{os.getcwd()}/overview {project.name}.xlsx'
+    excel_path = f'{os.getcwd()}/Mängelliste {project.name}.xlsx'
 
     ids = rems.columns
 
@@ -885,7 +885,7 @@ def excel_overview_8p2_Inspect(project):
         old_address = address
     ws.freeze_panes = ws['A2']
     DEFAULT_FONT.name = 'Arial'
-    wb.save(f'{os.getcwd()}/overview {project.name}_Insp.xlsx')
+    wb.save(f'{os.getcwd()}/Mängelliste {project.name} ganzer Text.xlsx')
 
 
 def get_default_remarks(checklist):
